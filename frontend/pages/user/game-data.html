@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Game Data | GameVault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../css/dashboard.css" />
+    <style>
+        /* Game Data Specific Styles */
+        .search-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #61CAED;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #fff;
+            color: #012952;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #014F9D;
+            box-shadow: 0 0 0 3px rgba(1, 79, 157, 0.1);
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: #fff;
+            border: 2px solid #61CAED;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #014F9D;
+            font-size: 13px;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: linear-gradient(135deg, #014F9D, #61CAED);
+            color: #fff;
+            border-color: #014F9D;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+            border-color: #61CAED;
+        }
+
+        .game-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .game-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #012952;
+            margin-bottom: 8px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            padding: 4px 10px;
+            background: rgba(97, 202, 237, 0.2);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #014F9D;
+        }
+
+        .game-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+
+        .rating-value {
+            font-weight: 700;
+            color: #012952;
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #dcfce7;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #166534;
+        }
+
+        .api-status.unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .api-status .dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .api-status.unavailable .dot {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #012952;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="api-modal" id="apiModal" style="display: none;">
+        <div class="api-modal-content">
+            <button class="api-modal-close" onclick="closeApiModal()">✕</button>
+            <h3>🔎 API Explorer</h3>
+
+            <p><strong>Endpoint:</strong></p>
+            <code id="api-endpoint"></code>
+
+            <p><strong>Method:</strong> GET</p>
+
+            <button id="btn-try-api" class="action-btn" style="margin-top: 16px;">▶ Try API</button>
+
+            <pre id="api-response">// response will appear here</pre>
+
+
+        </div>
+    </div>
+
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">🎮 GameVault</div>
+
+            <nav>
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="api-keys.html">🔑 API Keys</a>
+                <a href="usage-history.html">📈 Usage History</a>
+                <a href="api-explorer.html">🔎 API Explorer</a>
+                <a class="active" href="game-data.html">🎮 Game Data</a>
+                <a href="documentation.html">📚 Documentation</a>
+            </nav>
+
+            <div class="logout" id="btn-logout">🚪 Logout</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <div class="header">
+                <h1>Game Data</h1>
+                <div class="user-profile">
+                    <span id="username">User</span>
+                    <div class="avatar" id="avatar">U</div>
+                </div>
+            </div>
+
+            <!-- SEARCH BAR -->
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="🔍 Search games by title or genre..."
+                    onkeyup="searchGames()" />
+
+                <div class="filters">
+                    <div class="filter-chip active" data-genre="all" onclick="filterByGenre('all')">All Games</div>
+                    <div class="filter-chip" data-genre="Action" onclick="filterByGenre('Action')">⚔️ Action</div>
+                    <div class="filter-chip" data-genre="RPG" onclick="filterByGenre('RPG')">🐉 RPG</div>
+                    <div class="filter-chip" data-genre="Strategy" onclick="filterByGenre('Strategy')">🏰 Strategy</div>
+                    <div class="filter-chip" data-genre="Sports" onclick="filterByGenre('Sports')">🏎️ Sports</div>
+                    <div class="filter-chip" data-genre="Adventure" onclick="filterByGenre('Adventure')">🚀 Adventure
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAMES GRID -->
+            <div class="games-grid" id="games-grid">
+                <div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 60px;">
+                    Loading games...
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../../js/user.js"></script>
+    <script>
+        let allGames = [];
+        let currentFilter = 'all';
+
+        // Load games from API
+        async function loadGames() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                const response = await fetch('http://localhost:3001/api/games', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch games');
+
+                allGames = await response.json();
+                renderGames(allGames);
+
+            } catch (error) {
+                console.error('Error loading games:', error);
+                document.getElementById('games-grid').innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="icon">❌</div>
+          <h3>Failed to Load Games</h3>
+          <p>Please try again later</p>
+        </div>
+      `;
+            }
+        }
+
+        function renderGames(games) {
+            const grid = document.getElementById('games-grid');
+
+            if (games.length === 0) {
+                grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="icon">🎮</div>
+          <h3>No Games Found</h3>
+          <p>Try adjusting your search or filters</p>
+        </div>
+      `;
+                return;
+            }
+
+            grid.innerHTML = games.map(game => {
+                const stars = '⭐'.repeat(Math.round(game.rating));
+                const apiStatusClass = game.apiAvailable ? '' : 'unavailable';
+                const apiStatusText = game.apiAvailable ? 'API Available' : 'API Unavailable';
+
+                return `
+        <div class="game-card" onclick="viewGameDetails(${game.id})">
+          <span class="game-icon">${game.icon}</span>
+          <div class="game-title">${game.title}</div>
+          
+          <div class="game-meta">
+            <span class="meta-tag">${game.genre}</span>
+            <span class="meta-tag">${game.platform}</span>
+          </div>
+          
+          <div class="game-rating">
+            <span class="stars">${stars}</span>
+            <span class="rating-value">${game.rating.toFixed(1)}</span>
+          </div>
+          
+          <div class="game-description">${game.description}</div>
+          
+          <div class="api-status ${apiStatusClass}">
+            <span class="dot"></span>
+            ${apiStatusText}
+          </div>
+        </div>
+      `;
+            }).join('');
+        }
+
+        function searchGames() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+
+            let filtered = allGames;
+
+            // Apply genre filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(game => game.genre === currentFilter);
+            }
+
+            // Apply search query
+            if (query) {
+                filtered = filtered.filter(game =>
+                    game.title.toLowerCase().includes(query) ||
+                    game.genre.toLowerCase().includes(query)
+                );
+            }
+
+            renderGames(filtered);
+        }
+
+        function filterByGenre(genre) {
+            currentFilter = genre;
+
+            // Update active chip
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            searchGames();
+        }
+
+        function viewGameDetails(gameId) {
+            // You can implement a modal or navigate to a detail page
+            const game = allGames.find(g => g.id === gameId);
+            if (game) {
+                alert(`Game: ${game.title}\nGenre: ${game.genre}\nPlatform: ${game.platform}\nRating: ${game.rating}\n\nAPI Endpoint: ${game.apiEndpoint || 'N/A'}`);
+            }
+        }
+
+        // Load games on page load
+        loadGames();
+    </script>
+</body>
+
+</html>

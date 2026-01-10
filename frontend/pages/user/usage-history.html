@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Usage History | GameVault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../css/dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /* Additional styles for usage history */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #61CAED;
+        }
+
+        .metric-card h4 {
+            font-size: 13px;
+            color: #014F9D;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .metric-card .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #012952;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: #014F9D;
+            color: #fff;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .data-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .data-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #012952;
+            font-size: 14px;
+        }
+
+        .data-table tr:hover {
+            background: rgba(97, 202, 237, 0.05);
+        }
+
+        .status-code {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status-code.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-code.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .method-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 11px;
+            background: #61CAED;
+            color: #fff;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            padding: 10px 16px;
+            border: 2px solid #61CAED;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fff;
+            color: #012952;
+        }
+
+        .filter-bar button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #014F9D, #61CAED);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-bar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(1, 79, 157, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">🎮 GameVault</div>
+
+            <nav>
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="api-keys.html">🔑 API Keys</a>
+                <a class="active" href="usage-history.html">📈 Usage History</a>
+                <a href="api-explorer.html">🔎 API Explorer</a>
+                <a href="game-data.html">🎮 Game Data</a>
+                <a href="documentation.html">📚 Documentation</a>
+            </nav>
+
+            <div class="logout" id="btn-logout">🚪 Logout</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <div class="header">
+                <h1>Usage History</h1>
+                <div class="user-profile">
+                    <span id="username">User</span>
+                    <div class="avatar" id="avatar">U</div>
+                </div>
+            </div>
+
+            <!-- METRICS -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h4>Total Requests</h4>
+                    <div class="metric-value" id="metric-total">0</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Success Rate</h4>
+                    <div class="metric-value" id="metric-success">0%</div>
+                </div>
+                <div class="metric-card">
+                    <h4>Avg Response Time</h4>
+                    <div class="metric-value" id="metric-response">0ms</div>
+                </div>
+                <div class="metric-card">
+                    <h4>This Month</h4>
+                    <div class="metric-value" id="metric-month">0</div>
+                </div>
+            </div>
+
+            <!-- USAGE CHART -->
+            <div class="chart-container">
+                <h2>📈 Request Trends (Last 30 Days)</h2>
+                <canvas id="usageChart"></canvas>
+            </div>
+
+            <!-- REQUEST LOG TABLE -->
+            <div class="table-container">
+                <h2 style="color: #014F9D; margin-bottom: 20px; font-size: 20px;">📋 Recent Requests</h2>
+
+                <!-- FILTERS -->
+                <div class="filter-bar">
+                    <input type="date" id="filter-date" placeholder="Filter by date">
+                    <select id="filter-status">
+                        <option value="">All Status</option>
+                        <option value="200">Success (200)</option>
+                        <option value="400">Bad Request (400)</option>
+                        <option value="401">Unauthorized (401)</option>
+                        <option value="500">Server Error (500)</option>
+                    </select>
+                    <button onclick="applyFilters()">Apply Filters</button>
+                    <button onclick="clearFilters()" style="background: #6b7280;">Clear</button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Endpoint</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Response Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="request-log">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">
+                                <div class="loading">Loading request history</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../../js/user.js"></script>
+    <script>
+        // Load usage history data
+        async function loadUsageHistory() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                // Fetch usage data
+                const response = await fetch('http://localhost:3001/api/user/usage', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch usage data');
+
+                const data = await response.json();
+
+                // Update metrics
+                updateMetrics(data.recentRequests);
+
+                // Render chart
+                renderUsageChart(data.chartData);
+
+                // Render table
+                renderRequestTable(data.recentRequests);
+
+            } catch (error) {
+                console.error('Error loading usage history:', error);
+                document.getElementById('request-log').innerHTML = `
+        <tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 40px;">
+          Failed to load usage history
+        </td></tr>
+      `;
+            }
+        }
+
+        function updateMetrics(requests) {
+            const total = requests.length;
+            const successCount = requests.filter(r => r.statusCode >= 200 && r.statusCode < 300).length;
+            const successRate = total > 0 ? ((successCount / total) * 100).toFixed(1) : 0;
+            const avgResponse = total > 0 ? (requests.reduce((sum, r) => sum + r.responseTime, 0) / total).toFixed(0) : 0;
+
+            const now = new Date();
+            const thisMonth = requests.filter(r => {
+                const reqDate = new Date(r.timestamp);
+                return reqDate.getMonth() === now.getMonth() && reqDate.getFullYear() === now.getFullYear();
+            }).length;
+
+            document.getElementById('metric-total').textContent = total;
+            document.getElementById('metric-success').textContent = successRate + '%';
+            document.getElementById('metric-response').textContent = avgResponse + 'ms';
+            document.getElementById('metric-month').textContent = thisMonth;
+        }
+
+        function renderUsageChart(chartData) {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                    datasets: [{
+                        label: 'API Requests',
+                        data: chartData.map(d => d.count),
+                        borderColor: '#014F9D',
+                        backgroundColor: 'rgba(97, 202, 237, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#61CAED',
+                        pointBorderColor: '#014F9D',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#014F9D'
+                            },
+                            grid: {
+                                color: 'rgba(1, 79, 157, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#014F9D'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRequestTable(requests) {
+            const tbody = document.getElementById('request-log');
+
+            if (requests.length === 0) {
+                tbody.innerHTML = `
+        <tr><td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+          No requests found
+        </td></tr>
+      `;
+                return;
+            }
+
+            tbody.innerHTML = requests.map(req => {
+                const statusClass = req.statusCode >= 200 && req.statusCode < 300 ? 'success' : 'error';
+                const timestamp = new Date(req.timestamp).toLocaleString();
+
+                return `
+        <tr>
+          <td>${timestamp}</td>
+          <td><code>${req.endpoint}</code></td>
+          <td><span class="method-badge">${req.method}</span></td>
+          <td><span class="status-code ${statusClass}">${req.statusCode}</span></td>
+          <td>${req.responseTime}ms</td>
+        </tr>
+      `;
+            }).join('');
+        }
+
+        function applyFilters() {
+            // Implement filter logic here
+            console.log('Applying filters...');
+        }
+
+        function clearFilters() {
+            document.getElementById('filter-date').value = '';
+            document.getElementById('filter-status').value = '';
+            loadUsageHistory();
+        }
+
+        // Load data on page load
+        loadUsageHistory();
+    </script>
+</body>
+
+</html>

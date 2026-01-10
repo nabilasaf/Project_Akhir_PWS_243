@@ -1,0 +1,203 @@
+/* =====================================
+   API EXPLORER PAGE - WEATHER.COM INSPIRED
+   Unified Theme
+===================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #014F9D 0%, #0369b8 50%, #61CAED 100%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* NAVBAR - Glassmorphism */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar nav {
+  display: flex;
+  gap: 24px;
+}
+
+.navbar nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: rgba(255, 255, 255, 0.95);
+  color: #014F9D;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn.primary:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn.ghost {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn.full {
+  width: 100%;
+}
+
+/* EXPLORER */
+.explorer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 60px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.explorer-left,
+.explorer-right {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.explorer-left h1 {
+  color: #014F9D;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.explorer-left p {
+  color: #6b7280;
+  margin-bottom: 28px;
+  font-size: 16px;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #012952;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid #61CAED;
+  background: #fff;
+  color: #012952;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #014F9D;
+  box-shadow: 0 0 0 3px rgba(1, 79, 157, 0.1);
+}
+
+/* RESPONSE */
+.explorer-right h3 {
+  color: #014F9D;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.explorer-right pre {
+  background: #1e293b;
+  color: #e5e7eb;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 300px;
+  border-left: 4px solid #61CAED;
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .navbar nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .explorer {
+    grid-template-columns: 1fr;
+    padding: 40px 20px;
+  }
+
+  .explorer-left,
+  .explorer-right {
+    padding: 24px;
+  }
+}

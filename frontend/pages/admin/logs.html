@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>System Logs | GameVault Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../css/admin.css" />
+    <style>
+        /* Logs Specific Styles */
+        .filter-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-grid input,
+        .filter-grid select {
+            padding: 12px 16px;
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fff;
+            color: #012952;
+        }
+
+        .filter-grid input:focus,
+        .filter-grid select:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-actions button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #012952;
+        }
+
+        .btn-clear {
+            background: #6b7280;
+            color: #fff;
+        }
+
+        .btn-export {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        .filter-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .log-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .log-stat {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .log-stat .count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #012952;
+            margin-bottom: 4px;
+        }
+
+        .log-stat .label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .log-stat.success .count {
+            color: #22c55e;
+        }
+
+        .log-stat.error .count {
+            color: #ef4444;
+        }
+
+        .log-stat.warning .count {
+            color: #fbbf24;
+        }
+
+        .log-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            overflow-x: auto;
+        }
+
+        .log-entry {
+            padding: 16px;
+            border-left: 4px solid #e5e7eb;
+            margin-bottom: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .log-entry:hover {
+            background: #f3f4f6;
+            transform: translateX(4px);
+        }
+
+        .log-entry.success {
+            border-left-color: #22c55e;
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .log-entry.error {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .log-entry.warning {
+            border-left-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .log-timestamp {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .log-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .log-status.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .log-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .log-status.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .log-details {
+            font-size: 14px;
+            color: #012952;
+            margin-bottom: 4px;
+        }
+
+        .log-meta {
+            font-size: 12px;
+            color: #6b7280;
+            font-family: 'Courier New', monospace;
+        }
+
+        .load-more {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .load-more button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #012952;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">👑 GameVault Admin</div>
+
+            <nav>
+                <a href="dashboard.html">📊 Dashboard</a>
+                <a href="users.html">👥 User Management</a>
+                <a href="monitoring.html">📈 API Monitoring</a>
+                <a class="active" href="logs.html">📋 System Logs</a>
+                <a href="games.html">🎮 Game Management</a>
+            </nav>
+
+            <div class="logout" id="btn-logout">🚪 Logout</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div>
+                    <h1>System Logs</h1>
+                    <span class="admin-badge">Administrator</span>
+                </div>
+                <div class="user-profile">
+                    <span id="username">Admin</span>
+                    <div class="avatar" id="avatar">A</div>
+                </div>
+            </div>
+
+            <!-- LOG STATS -->
+            <div class="log-stats">
+                <div class="log-stat">
+                    <div class="count" id="stat-total">0</div>
+                    <div class="label">Total Logs</div>
+                </div>
+                <div class="log-stat success">
+                    <div class="count" id="stat-success">0</div>
+                    <div class="label">Success (2xx)</div>
+                </div>
+                <div class="log-stat error">
+                    <div class="count" id="stat-errors">0</div>
+                    <div class="label">Errors (4xx/5xx)</div>
+                </div>
+                <div class="log-stat warning">
+                    <div class="count" id="stat-warnings">0</div>
+                    <div class="label">Warnings</div>
+                </div>
+            </div>
+
+            <!-- FILTER PANEL -->
+            <div class="filter-panel">
+                <h3 style="color: #012952; margin-bottom: 16px; font-size: 18px;">🔍 Filter Logs</h3>
+
+                <div class="filter-grid">
+                    <input type="datetime-local" id="filter-start" placeholder="Start Date">
+                    <input type="datetime-local" id="filter-end" placeholder="End Date">
+
+                    <select id="filter-status">
+                        <option value="">All Status Codes</option>
+                        <option value="2xx">2xx Success</option>
+                        <option value="4xx">4xx Client Error</option>
+                        <option value="5xx">5xx Server Error</option>
+                    </select>
+
+                    <select id="filter-method">
+                        <option value="">All Methods</option>
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+
+                    <input type="text" id="filter-endpoint" placeholder="Filter by endpoint...">
+                    <input type="text" id="filter-user" placeholder="Filter by user ID...">
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
+                    <button class="btn-clear" onclick="clearFilters()">Clear All</button>
+                    <button class="btn-export" onclick="exportLogs()">📥 Export CSV</button>
+                </div>
+            </div>
+
+            <!-- LOGS DISPLAY -->
+            <div class="log-table">
+                <h2 style="color: #012952; margin-bottom: 20px; font-size: 20px;">📋 Recent Logs</h2>
+
+                <div id="logs-container">
+                    <div class="loading">Loading system logs...</div>
+                </div>
+
+                <div class="load-more">
+                    <button onclick="loadMoreLogs()">Load More Logs</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../../js/admin.js"></script>
+    <script>
+        let allLogs = [];
+        let displayedLogs = 20;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLogs();
+        });
+
+        async function loadLogs() {
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('http://localhost:3001/api/admin/logs?limit=100', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch logs');
+
+                allLogs = await response.json();
+                updateStats();
+                renderLogs();
+
+            } catch (error) {
+                console.error('Error loading logs:', error);
+
+                // Generate sample logs for demonstration
+                allLogs = generateSampleLogs();
+                updateStats();
+                renderLogs();
+            }
+        }
+
+        function generateSampleLogs() {
+            const methods = ['GET', 'POST', 'PUT', 'DELETE'];
+            const endpoints = [
+                '/api/v1/games',
+                '/api/v1/games/:id',
+                '/api/auth/login',
+                '/api/user/dashboard',
+                '/api/user/keys',
+                '/api/admin/users'
+            ];
+            const statuses = [200, 201, 400, 401, 404, 500];
+
+            return Array.from({ length: 50 }, (_, i) => {
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const method = methods[Math.floor(Math.random() * methods.length)];
+                const endpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
+
+                return {
+                    timestamp: new Date(Date.now() - i * 60000 * Math.random() * 10).toISOString(),
+                    method: method,
+                    endpoint: endpoint,
+                    status_code: status,
+                    response_time_ms: Math.floor(Math.random() * 200 + 50),
+                    user_id: Math.floor(Math.random() * 100) + 1,
+                    ip_address: `192.168.1.${Math.floor(Math.random() * 255)}`
+                };
+            });
+        }
+
+        function updateStats() {
+            const total = allLogs.length;
+            const success = allLogs.filter(log => log.status_code >= 200 && log.status_code < 300).length;
+            const errors = allLogs.filter(log => log.status_code >= 400).length;
+            const warnings = allLogs.filter(log => log.status_code >= 300 && log.status_code < 400).length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-success').textContent = success;
+            document.getElementById('stat-errors').textContent = errors;
+            document.getElementById('stat-warnings').textContent = warnings;
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logs-container');
+            const logsToShow = allLogs.slice(0, displayedLogs);
+
+            if (logsToShow.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">No logs found</div>';
+                return;
+            }
+
+            container.innerHTML = logsToShow.map(log => {
+                const statusClass = log.status_code >= 200 && log.status_code < 300 ? 'success' :
+                    log.status_code >= 400 ? 'error' : 'warning';
+
+                const timestamp = new Date(log.timestamp).toLocaleString();
+
+                return `
+        <div class="log-entry ${statusClass}">
+          <div class="log-header">
+            <span class="log-timestamp">⏰ ${timestamp}</span>
+            <span class="log-status ${statusClass}">${log.status_code}</span>
+          </div>
+          <div class="log-details">
+            <strong>${log.method}</strong> ${log.endpoint} - ${log.response_time_ms}ms
+          </div>
+          <div class="log-meta">
+            User: ${log.email} | IP: ${log.ip_address || 'N/A'}
+          </div>
+        </div>
+      `;
+            }).join('');
+        }
+
+        function loadMoreLogs() {
+            displayedLogs += 20;
+            renderLogs();
+        }
+
+        function applyFilters() {
+            const startDate = document.getElementById('filter-start').value;
+            const endDate = document.getElementById('filter-end').value;
+            const status = document.getElementById('filter-status').value;
+            const method = document.getElementById('filter-method').value;
+            const endpoint = document.getElementById('filter-endpoint').value.toLowerCase();
+            const userId = document.getElementById('filter-user').value;
+
+            let filtered = [...allLogs];
+
+            if (startDate) {
+                filtered = filtered.filter(log => new Date(log.timestamp) >= new Date(startDate));
+            }
+
+            if (endDate) {
+                filtered = filtered.filter(log => new Date(log.timestamp) <= new Date(endDate));
+            }
+
+            if (status) {
+                if (status === '2xx') {
+                    filtered = filtered.filter(log => log.status_code >= 200 && log.status_code < 300);
+                } else if (status === '4xx') {
+                    filtered = filtered.filter(log => log.status_code >= 400 && log.status_code < 500);
+                } else if (status === '5xx') {
+                    filtered = filtered.filter(log => log.status_code >= 500);
+                }
+            }
+
+            if (method) {
+                filtered = filtered.filter(log => log.method === method);
+            }
+
+            if (endpoint) {
+                filtered = filtered.filter(log => log.endpoint.toLowerCase().includes(endpoint));
+            }
+
+            if (userId) {
+                filtered = filtered.filter(log => log.user_id.toString() === userId);
+            }
+
+            allLogs = filtered;
+            displayedLogs = 20;
+            updateStats();
+            renderLogs();
+        }
+
+        function clearFilters() {
+            document.getElementById('filter-start').value = '';
+            document.getElementById('filter-end').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-method').value = '';
+            document.getElementById('filter-endpoint').value = '';
+            document.getElementById('filter-user').value = '';
+
+            loadLogs();
+        }
+
+        function exportLogs() {
+            const csv = [
+                ['Timestamp', 'Method', 'Endpoint', 'Status Code', 'Response Time (ms)', 'User ID', 'IP Address'],
+                ...allLogs.map(log => [
+                    log.timestamp,
+                    log.method,
+                    log.endpoint,
+                    log.status_code,
+                    log.response_time_ms,
+                    log.user_id,
+                    log.ip_address || 'N/A'
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gamevault-logs-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+
+</html>

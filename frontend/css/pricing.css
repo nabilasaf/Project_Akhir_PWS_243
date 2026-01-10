@@ -1,0 +1,267 @@
+/* =====================================
+   PRICING PAGE - WEATHER.COM INSPIRED
+   Unified Theme
+===================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #014F9D 0%, #0369b8 50%, #61CAED 100%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* NAVBAR - Glassmorphism */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar nav {
+  display: flex;
+  gap: 24px;
+}
+
+.navbar nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn.primary {
+  background: rgba(255, 255, 255, 0.95);
+  color: #014F9D;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn.primary:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn.ghost {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ghost button inside pricing cards - needs different styling */
+.pricing-card .btn.ghost {
+  color: #014F9D;
+  background: #fff;
+  border: 2px solid #014F9D;
+}
+
+.pricing-card .btn.ghost:hover {
+  background: #014F9D;
+  color: #fff;
+}
+
+.btn.full {
+  display: block;
+  width: 100%;
+}
+
+/* HERO */
+.pricing-hero {
+  text-align: center;
+  padding: 80px 20px 40px;
+}
+
+.pricing-hero h1 {
+  font-size: 42px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-hero p {
+  max-width: 600px;
+  margin: auto;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+}
+
+/* PRICING */
+.pricing {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  padding: 40px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 36px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-card.popular {
+  border-color: #61CAED;
+  transform: scale(1.05);
+  box-shadow: 0 12px 40px rgba(97, 202, 237, 0.3);
+}
+
+.pricing-card.popular:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+.badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #014F9D, #61CAED);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(1, 79, 157, 0.3);
+}
+
+.pricing-card h3 {
+  color: #014F9D;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.price {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 20px 0;
+  color: #012952;
+}
+
+.price span {
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.pricing-card ul {
+  list-style: none;
+  margin: 28px 0;
+  text-align: left;
+}
+
+.pricing-card li {
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: #374151;
+  padding-left: 8px;
+}
+
+/* CTA */
+.pricing-cta {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 40px 0 0 0;
+}
+
+.pricing-cta h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-cta p {
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 18px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .navbar nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pricing {
+    padding: 40px 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card.popular {
+    transform: scale(1);
+  }
+
+  .pricing-card.popular:hover {
+    transform: translateY(-4px);
+  }
+
+  .pricing-hero h1 {
+    font-size: 32px;
+  }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Contact Us | GameVault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/contact.css" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">🎮 GameVault</div>
+
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="../index.html#api-demo">Try API</a>
+            <a href="docs.html">Docs</a>
+            <a class="active" href="contact.html">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="login.html" class="btn ghost">Login</a>
+            <a href="../register.html" class="btn primary">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="contact-hero">
+        <h1>Contact Us</h1>
+        <p>Get in touch if you have any questions or want to get a custom quote</p>
+    </section>
+
+    <!-- CONTACT CONTENT -->
+    <section class="contact-content">
+
+        <!-- CONTACT FORM -->
+        <div class="contact-form-container">
+            <h2>Ask A Question</h2>
+            <p class="form-subtitle">For pre-sale and general questions, please use the form below.</p>
+
+            <form id="contact-form" class="contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Name" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Email" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="subject" placeholder="Subject" required />
+                </div>
+
+                <div class="form-group">
+                    <textarea id="message" rows="6" placeholder="Enter your message" required></textarea>
+                </div>
+
+                <button type="submit" class="btn primary full">Send Message</button>
+            </form>
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="contact-info">
+            <div class="info-card">
+                <div class="info-icon">📧</div>
+                <h3>Email Us</h3>
+                <p>support@gamevault.com</p>
+                <p>sales@gamevault.com</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">💬</div>
+                <h3>Live Chat</h3>
+                <p>Available Monday - Friday</p>
+                <p>9:00 AM - 6:00 PM EST</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">📚</div>
+                <h3>Documentation</h3>
+                <p>Check our comprehensive</p>
+                <p><a href="docs.html">API Documentation</a></p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">🚀</div>
+                <h3>Enterprise Sales</h3>
+                <p>Need a custom solution?</p>
+                <p>Contact our sales team</p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>How do I get started?</h3>
+                <p>Simply sign up for a free account and generate your API key. You can start making requests
+                    immediately!</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>What payment methods do you accept?</h3>
+                <p>We accept all major credit cards, PayPal, and bank transfers for Enterprise plans.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I upgrade or downgrade my plan?</h3>
+                <p>Yes! You can change your plan at any time from your dashboard. Changes take effect immediately.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is there a free trial?</h3>
+                <p>Our Free plan gives you 10,000 requests per month with no credit card required. Perfect for testing!
+                </p>
+            </div>
+
+            <div class="faq-item">
+                <h3>What's your SLA for Enterprise?</h3>
+                <p>Enterprise customers get 99.9% uptime SLA with dedicated support and custom endpoints.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How quickly do you respond?</h3>
+                <p>Free users: 48 hours. Pro: 24 hours. Enterprise: Priority support with 4-hour response time.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Handle form submission
+        document.getElementById('contact-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Show success message
+            alert(`Thank you ${name}! We've received your message and will get back to you at ${email} soon.`);
+
+            // Reset form
+            this.reset();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>API Explorer | GameVault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/dashboard.css" />
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="logo">🎮 GameVault</div>
+      <nav>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="api-keys.html">🔑 API Keys</a>
+        <a href="usage-history.html">📈 Usage History</a>
+        <a class="active" href="api-explorer.html">🔎 API Explorer</a>
+        <a href="game-data.html">🎮 Game Data</a>
+        <a href="documentation.html">📚 Documentation</a>
+      </nav>
+      <div class="logout" id="btn-logout">🚪 Logout</div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <h1>API Explorer</h1>
+        <div class="user-profile">
+          <span id="username">User</span>
+          <div class="avatar" id="avatar">U</div>
+        </div>
+      </header>
+
+      <!-- QUICK API TEST -->
+      <section class="section">
+        <h2>🔎 Test Your API Endpoints</h2>
+        <p style="color: #64748b; margin-bottom: 24px;">Select an endpoint and test it with your API key in real-time.
+        </p>
+
+        <!-- API KEY INPUT -->
+        <div class="api-key-input-container"
+          style="margin-bottom: 24px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px solid #e2e8f0;">
+          <label for="api-key-input" style="display: block; margin-bottom: 12px; color: #012952;">
+            <strong>🔑 API Key (Optional)</strong>
+            <span style="color: #64748b; font-weight: normal; font-size: 13px; margin-left: 8px;">
+              - Leave empty to use your JWT token
+            </span>
+          </label>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <input type="text" id="api-key-input" placeholder="Enter your API key or leave empty for JWT auth..."
+              style="flex: 1; padding: 12px 16px; border: 2px solid #cbd5e1; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 14px; color: #012952;" />
+            <button class="action-btn" id="use-jwt-btn" style="white-space: nowrap;">
+              Use JWT Token
+            </button>
+          </div>
+          <small style="color: #64748b; display: block; margin-top: 10px;">
+            💡 Tip: Get your API key from the <a href="api-keys.html"
+              style="color: #014F9D; font-weight: 600; text-decoration: underline;">API Keys</a> page
+          </small>
+        </div>
+
+        <div class="quick-test-container">
+          <div class="test-endpoints">
+            <button class="test-endpoint-btn active" data-endpoint="/api/games" data-method="GET">
+              <span class="method-tag get">GET</span>
+              <span>/api/games</span>
+            </button>
+            <button class="test-endpoint-btn" data-endpoint="/api/games/1" data-method="GET">
+              <span class="method-tag get">GET</span>
+              <span>/api/games/1</span>
+            </button>
+            <button class="test-endpoint-btn" data-endpoint="/api/games?search=RPG" data-method="GET">
+              <span class="method-tag get">GET</span>
+              <span>/api/games?search=RPG</span>
+            </button>
+          </div>
+
+          <div class="test-panel">
+            <div class="test-request">
+              <div class="test-request-line">
+                <span class="method-badge get" id="test-method">GET</span>
+                <code id="test-endpoint">/api/games</code>
+              </div>
+              <div class="auth-info" id="auth-info"
+                style="margin: 12px 0; padding: 10px; background: #f8fafc; border-radius: 8px; font-size: 13px; color: #64748b; border: 1px solid #e2e8f0;">
+                <strong>Auth:</strong> <span id="auth-type">JWT Token</span>
+              </div>
+              <button class="action-btn" id="test-api-btn">
+                <span>▶</span> Test API
+              </button>
+            </div>
+
+            <div class="test-response" id="test-response">
+              <div class="test-response-placeholder">
+                Click "Test API" to see live results from your backend
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../js/user.js"></script>
+  <script src="../../js/api-explorer.js"></script>
+</body>
+
+</html>

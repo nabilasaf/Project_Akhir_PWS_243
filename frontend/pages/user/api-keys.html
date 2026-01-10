@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>API Keys | GameVault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/dashboard.css" />
+  <style>
+    /* API Keys Specific Styles */
+    .api-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .api-header h2 {
+      font-size: 24px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, #014F9D, #61CAED);
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(1, 79, 157, 0.35);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(1, 79, 157, 0.45);
+    }
+
+    .table-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      overflow-x: auto;
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .api-table th {
+      background: #014F9D;
+      color: #fff;
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .api-table th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .api-table th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .api-table td {
+      padding: 16px;
+      border-bottom: 1px solid #e5e7eb;
+      color: #012952;
+      font-size: 14px;
+    }
+
+    .api-table tr:hover {
+      background: rgba(97, 202, 237, 0.05);
+    }
+
+    .api-table code {
+      background: #f3f4f6;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      color: #014F9D;
+      font-size: 13px;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge.active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.disabled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .action-btn {
+      cursor: pointer;
+      font-weight: 600;
+      margin-right: 12px;
+      color: #014F9D;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .action-btn:hover {
+      background: rgba(1, 79, 157, 0.1);
+    }
+
+    .action-btn.danger {
+      color: #dc2626;
+    }
+
+    .action-btn.danger:hover {
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6b7280;
+    }
+
+    .empty-state .icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 20px;
+      color: #012952;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">🎮 GameVault</div>
+
+      <nav>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a class="active" href="api-keys.html">🔑 API Keys</a>
+        <a href="usage-history.html">📈 Usage History</a>
+        <a href="api-explorer.html">🔎 API Explorer</a>
+        <a href="game-data.html">🎮 Game Data</a>
+        <a href="documentation.html">📚 Documentation</a>
+      </nav>
+
+      <div class="logout" id="btn-logout">🚪 Logout</div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- HEADER -->
+      <div class="header">
+        <h1>API Keys</h1>
+        <div class="user-profile">
+          <span id="username">User</span>
+          <div class="avatar" id="avatar">U</div>
+        </div>
+      </div>
+
+      <!-- API KEYS HEADER -->
+      <div class="api-header">
+        <h2>🔑 Your API Keys</h2>
+        <button class="btn-generate" id="btn-generate">
+          <span>＋</span>
+          Generate New Key
+        </button>
+      </div>
+
+      <!-- API KEYS TABLE -->
+      <div class="table-card">
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>API Key</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Last Used</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="api-keys-list">
+            <tr>
+              <td colspan="5">
+                <div class="loading">Loading API keys</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- INFO BOX -->
+      <div class="section" style="margin-top: 24px;">
+        <h2>ℹ️ About API Keys</h2>
+        <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;">
+          API keys are used to authenticate your requests to the GameVault API. Keep your keys secure and never share
+          them publicly.
+        </p>
+        <ul style="color: #374151; line-height: 1.8; margin-left: 20px;">
+          <li>Each key is unique and tied to your account</li>
+          <li>You can generate multiple keys for different applications</li>
+          <li>Revoked keys cannot be recovered - generate a new one if needed</li>
+          <li>Monitor your usage on the <a href="usage-history.html" style="color: #014F9D; font-weight: 600;">Usage
+              History</a> page</li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/user.js"></script>
+</body>
+
+</html>

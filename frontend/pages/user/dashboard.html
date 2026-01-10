@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard | GameVault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">🎮 GameVault</div>
+      <nav>
+        <a class="active" href="dashboard.html">📊 Dashboard</a>
+        <a href="api-keys.html">🔑 API Keys</a>
+        <a href="usage-history.html">📈 Usage History</a>
+        <a href="api-explorer.html">🔎 API Explorer</a>
+        <a href="game-data.html">🎮 Game Data</a>
+        <a href="documentation.html">📚 Documentation</a>
+      </nav>
+      <div class="logout" id="btn-logout">🚪 Logout</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="header">
+        <h1>Dashboard</h1>
+        <div class="user-profile">
+          <span id="username">User</span>
+          <div class="avatar" id="avatar">U</div>
+        </div>
+      </header>
+
+      <section class="stats">
+        <div class="stat-card">
+          <h3>Total Requests</h3>
+          <div class="value" id="total-requests">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Active API Keys</h3>
+          <div class="value" id="active-keys">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Remaining Quota</h3>
+          <div class="value" id="remaining-quota">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>API Status</h3>
+          <span class="status-badge operational" id="api-status">Operational</span>
+        </div>
+      </section>
+
+      <section class="chart-container">
+        <h2>📈 Usage Trends</h2>
+        <canvas id="usageChart"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../js/user.js"></script>
+</body>
+
+</html>

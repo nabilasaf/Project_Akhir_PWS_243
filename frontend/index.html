@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>GameVault API – Game Data for Developers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">🎮 GameVault</div>
+
+    <nav>
+      <a href="pages/features.html">Features</a>
+      <a href="pages/pricing.html">Pricing</a>
+      <a href="#api-demo">Try API</a>
+      <a href="pages/docs.html">Docs</a>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- LOGIN -->
+      <a href="pages/login.html" class="btn ghost">Login</a>
+
+      <!-- SIGN UP -->
+      <a href="register.html" class="btn primary">
+        Sign Up
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-text">
+      <h1>
+        JSON Game Data API<br />
+        for Developers
+      </h1>
+
+      <p>
+        GameVault provides real-time, structured game data API
+        trusted by developers worldwide.
+        Integrate games into your apps in minutes.
+      </p>
+
+      <div class="hero-actions">
+        <!-- GET API KEY -->
+        <a href="register.html" class="btn primary">
+          Get API Key
+        </a>
+
+        <!-- VIEW DOCS -->
+        <a href="pages/docs.html" class="btn secondary">View Docs</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="code-card">
+        <pre>
+GET /api/v1/games
+
+{
+  "title": "Elden Ring",
+  "genre": "RPG",
+  "rating": 4.9
+}
+</pre>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- API EXPLORER SECTION -->
+  <section class="api-explorer-section" id="api-demo">
+    <div class="explorer-container">
+      <div class="explorer-header">
+        <h2>🔎 Try Our API</h2>
+        <p>Test our endpoints in real-time. No signup required for demo.</p>
+      </div>
+
+      <div class="explorer-content">
+        <!-- LEFT: Endpoint Selector -->
+        <div class="endpoint-selector">
+          <h3>Select Endpoint</h3>
+          <div class="endpoint-list">
+            <button class="endpoint-btn active" data-endpoint="/api/games" data-method="GET">
+              <span class="method get">GET</span>
+              <span class="path">/api/games</span>
+            </button>
+            <button class="endpoint-btn" data-endpoint="/api/games/1" data-method="GET">
+              <span class="method get">GET</span>
+              <span class="path">/api/games/{id}</span>
+            </button>
+            <button class="endpoint-btn" data-endpoint="/api/games?search=RPG" data-method="GET">
+              <span class="method get">GET</span>
+              <span class="path">/api/games?search</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Request/Response -->
+        <div class="api-playground">
+          <div class="request-section">
+            <h3>Request</h3>
+            <div class="request-display">
+              <div class="request-line">
+                <span class="method-badge get" id="demo-method">GET</span>
+                <span class="endpoint-path" id="demo-endpoint">/api/games</span>
+              </div>
+              <div class="request-headers">
+                <code>Authorization: Bearer demo_token_xyz123</code>
+              </div>
+            </div>
+            <button class="try-btn" id="try-api-btn">
+              <span class="icon">▶</span> Try it now
+            </button>
+          </div>
+
+          <div class="response-section">
+            <h3>Response</h3>
+            <div class="response-display" id="demo-response">
+              <div class="response-placeholder">
+                Click "Try it now" to see the response
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="explorer-footer">
+        <p>Want to use the real API? <a href="register.html">Sign up for free</a> and get your API key!</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+<script src="js/landing-explorer.js"></script>
+
+</html>
