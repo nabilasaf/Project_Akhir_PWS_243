@@ -44,7 +44,7 @@ Regist
 
 DashBoard User
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025713" src="https://github.com/user-attachments/assets/d37e4801-4073-414f-a4ae-cd8b5c5ed527" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213208" src="https://github.com/user-attachments/assets/b96b32c0-2c25-4102-8dc6-a8a7b84543b6" />
 
 API KEYS
 
@@ -54,17 +54,18 @@ API KEYS
 
 Usage History
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025734" src="https://github.com/user-attachments/assets/fe6b1494-f465-4052-aa7a-c7f748cc36c9" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213221" src="https://github.com/user-attachments/assets/b5ae807a-788a-4ef0-b9e3-c037ad88fc3e" />
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025741" src="https://github.com/user-attachments/assets/e83d88ac-606c-43f4-92f1-0476e95429d1" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213228" src="https://github.com/user-attachments/assets/35ca0f20-2a8a-44fe-9168-2d37341ee1a0" />
 
 API Explorer
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025751" src="https://github.com/user-attachments/assets/d9775ae4-3755-4c54-b823-a9941ef4b550" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213242" src="https://github.com/user-attachments/assets/8331c086-1411-4250-9afa-dd3671504fbf" />
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025813" src="https://github.com/user-attachments/assets/c037693a-266c-4746-9f15-5a7c2e623c45" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213943" src="https://github.com/user-attachments/assets/eb7cade9-778c-4f1c-a62f-8bc3a1586782" />
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025818" src="https://github.com/user-attachments/assets/a64a4d8e-eec2-42f2-8ef8-2057b2ac91e1" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 214014" src="https://github.com/user-attachments/assets/d884b595-3085-4a20-92cb-c719f71b3690" />
+
 
 Game Data
 
@@ -78,7 +79,7 @@ Docs DashBoard User
 
 Admin DashBoard
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025908" src="https://github.com/user-attachments/assets/5124218d-58e6-441c-a1e3-8128b35557c8" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213305" src="https://github.com/user-attachments/assets/597e57ff-7964-4947-83bb-c29317651b3d" />
 
 <img width="1920" height="1080" alt="Screenshot 2026-01-11 025941" src="https://github.com/user-attachments/assets/671253ba-eb69-437a-ba29-0f04fc30eadc" />
 
@@ -86,7 +87,7 @@ Admin DashBoard
 
 Usage Manage
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 025952" src="https://github.com/user-attachments/assets/75c55eb2-670e-4744-a3f9-baa3b49d2d57" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213317" src="https://github.com/user-attachments/assets/f7a1f2ae-4815-4c20-951a-fcf5698f3273" />
 
 View Data 
 
@@ -98,15 +99,17 @@ Edit Data
 
 API Monitoring
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 030018" src="https://github.com/user-attachments/assets/201037b6-35f3-488a-b150-030096a76b42" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213325" src="https://github.com/user-attachments/assets/90b55c49-e296-4f65-9b3d-8a306b286634" />
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 030023" src="https://github.com/user-attachments/assets/e672362a-669b-445f-9f06-adffa841bfe3" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213332" src="https://github.com/user-attachments/assets/56ea525f-c2d1-45c9-b675-0fea46748dd0" />
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 030028" src="https://github.com/user-attachments/assets/5f793ef4-a7b4-4d4d-bf74-c711bf97dc96" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213337" src="https://github.com/user-attachments/assets/446e9a30-93bd-4a4f-ac9e-314263b8d05f" />
+
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213343" src="https://github.com/user-attachments/assets/0ca5f059-cc76-4cdd-9458-e91467fc18e7" />
 
 System Logs
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 030035" src="https://github.com/user-attachments/assets/28c7e533-6616-4612-b8f5-a0d0583b901a" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213352" src="https://github.com/user-attachments/assets/e34cc628-d075-451e-8354-412618eb7922" />
 
 <img width="1920" height="1080" alt="Screenshot 2026-01-11 030050" src="https://github.com/user-attachments/assets/259780cb-d9af-454a-9cc1-b04cd8977955" />
 
@@ -114,7 +117,7 @@ System Logs
 
 Game Manage
 
-<img width="1920" height="1080" alt="Screenshot 2026-01-11 030105" src="https://github.com/user-attachments/assets/ee816291-b194-4132-be2e-5526b04412cd" />
+<img width="1920" height="1080" alt="Screenshot 2026-01-12 213359" src="https://github.com/user-attachments/assets/510c4120-4c4d-4299-a855-12cd31a89f82" />
 
 Edit Data Game
 
