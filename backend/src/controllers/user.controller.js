@@ -67,11 +67,20 @@ exports.logs = async (req, res) => {
       [userId]
     );
 
+    // Transform snake_case to camelCase for frontend
+    const transformedLogs = logs.map(log => ({
+      timestamp: log.timestamp,
+      endpoint: log.endpoint,
+      method: log.method,
+      statusCode: log.status_code,
+      responseTime: log.response_time_ms
+    }));
+
     res.json({
       page,
       limit,
       total: count.total,
-      data: logs
+      data: transformedLogs
     });
 
   } catch (err) {
@@ -239,6 +248,10 @@ exports.usage = async (req, res) => {
   try {
     const userId = req.user.user_id;
 
+    // Get filter parameters
+    const filterDate = req.query.date;
+    const filterStatus = req.query.status;
+
     const [chartData] = await db.query(
       `
       SELECT 
@@ -253,6 +266,33 @@ exports.usage = async (req, res) => {
       [userId]
     );
 
+    // Get all unique status codes for this user (for dropdown)
+    const [uniqueStatuses] = await db.query(
+      `
+      SELECT DISTINCT status_code
+      FROM api_logs
+      WHERE user_id = ?
+      ORDER BY status_code ASC
+      `,
+      [userId]
+    );
+
+    // Build dynamic WHERE clause for filtering
+    let whereConditions = ['user_id = ?'];
+    let queryParams = [userId];
+
+    if (filterDate) {
+      whereConditions.push('DATE(timestamp) = ?');
+      queryParams.push(filterDate);
+    }
+
+    if (filterStatus) {
+      whereConditions.push('status_code = ?');
+      queryParams.push(filterStatus);
+    }
+
+    const whereClause = whereConditions.join(' AND ');
+
     const [recentRequests] = await db.query(
       `
       SELECT 
@@ -262,16 +302,29 @@ exports.usage = async (req, res) => {
         status_code,
         response_time_ms
       FROM api_logs
-      WHERE user_id = ?
+      WHERE ${whereClause}
       ORDER BY timestamp DESC
       LIMIT 50
       `,
-      [userId]
+      queryParams
     );
+
+    // Transform snake_case to camelCase for frontend
+    const transformedRequests = recentRequests.map(req => ({
+      timestamp: req.timestamp,
+      endpoint: req.endpoint,
+      method: req.method,
+      statusCode: req.status_code,
+      responseTime: req.response_time_ms
+    }));
+
+    // Extract status codes from unique statuses query
+    const availableStatusCodes = uniqueStatuses.map(s => s.status_code);
 
     res.json({
       chartData,
-      recentRequests
+      recentRequests: transformedRequests,
+      availableStatusCodes // ✅ Send all unique status codes
     });
 
   } catch (err) {

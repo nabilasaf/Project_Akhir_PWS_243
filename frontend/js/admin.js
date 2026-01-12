@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindLogout();
 
   if (document.getElementById("total-users")) {
-    loadDashboardStats();
+    // loadDashboardStats(); // Handled by dashboard.html specific script
   }
 
   if (document.getElementById("users-table-body")) {

@@ -92,6 +92,11 @@
             color: #166534;
         }
 
+        .status-code.redirect {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
         .status-code.error {
             background: #fee2e2;
             color: #991b1b;
@@ -208,10 +213,7 @@
                     <input type="date" id="filter-date" placeholder="Filter by date">
                     <select id="filter-status">
                         <option value="">All Status</option>
-                        <option value="200">Success (200)</option>
-                        <option value="400">Bad Request (400)</option>
-                        <option value="401">Unauthorized (401)</option>
-                        <option value="500">Server Error (500)</option>
+                        <!-- Options will be populated dynamically -->
                     </select>
                     <button onclick="applyFilters()">Apply Filters</button>
                     <button onclick="clearFilters()" style="background: #6b7280;">Clear</button>
@@ -242,8 +244,39 @@
 
     <script src="../../js/user.js"></script>
     <script>
+        // Global variable to store current filters
+        let currentFilters = {
+            date: '',
+            status: ''
+        };
+
+        // Populate status dropdown with all unique status codes from database
+        function populateStatusDropdown(statusCodes) {
+            const statusSelect = document.getElementById('filter-status');
+
+            // Common status codes to always include
+            const commonStatusCodes = [200, 304, 400, 401, 403, 404, 500, 502, 503];
+
+            // Merge database status codes with common ones, remove duplicates
+            const allStatusCodes = [...new Set([...statusCodes, ...commonStatusCodes])];
+
+            // Sort status codes numerically
+            const sortedStatuses = allStatusCodes.sort((a, b) => a - b);
+
+            // Clear existing options except "All Status"
+            statusSelect.innerHTML = '<option value="">All Status</option>';
+
+            // Add options for each unique status code using the same label format as the table
+            sortedStatuses.forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = getStatusLabel(status);
+                statusSelect.appendChild(option);
+            });
+        }
+
         // Load usage history data
-        async function loadUsageHistory() {
+        async function loadUsageHistory(filters = {}) {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
@@ -251,8 +284,16 @@
                     return;
                 }
 
+                // Build query string with filters
+                const queryParams = new URLSearchParams();
+                if (filters.date) queryParams.append('date', filters.date);
+                if (filters.status) queryParams.append('status', filters.status);
+
+                const queryString = queryParams.toString();
+                const url = `http://localhost:3001/api/user/usage${queryString ? '?' + queryString : ''}`;
+
                 // Fetch usage data
-                const response = await fetch('http://localhost:3001/api/user/usage', {
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -261,6 +302,11 @@
                 if (!response.ok) throw new Error('Failed to fetch usage data');
 
                 const data = await response.json();
+
+                // Populate status dropdown with ALL unique status codes from database (only on initial load)
+                if (!filters.date && !filters.status && data.availableStatusCodes) {
+                    populateStatusDropdown(data.availableStatusCodes);
+                }
 
                 // Update metrics
                 updateMetrics(data.recentRequests);
@@ -302,7 +348,12 @@
         function renderUsageChart(chartData) {
             const ctx = document.getElementById('usageChart').getContext('2d');
 
-            new Chart(ctx, {
+            // Destroy existing chart if it exists
+            if (window.usageChartInstance) {
+                window.usageChartInstance.destroy();
+            }
+
+            window.usageChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: chartData.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
@@ -352,6 +403,35 @@
             });
         }
 
+        // Helper function to get status label
+        function getStatusLabel(statusCode) {
+            if (statusCode >= 200 && statusCode < 300) {
+                return `Success (${statusCode})`;
+            } else if (statusCode >= 300 && statusCode < 400) {
+                // 3xx - Redirection
+                if (statusCode === 301) return `Moved Permanently (${statusCode})`;
+                if (statusCode === 302) return `Found (${statusCode})`;
+                if (statusCode === 304) return `Not Modified (${statusCode})`;
+                if (statusCode === 307) return `Temporary Redirect (${statusCode})`;
+                if (statusCode === 308) return `Permanent Redirect (${statusCode})`;
+                return `Redirect (${statusCode})`;
+            } else if (statusCode >= 400 && statusCode < 500) {
+                if (statusCode === 400) return `Bad Request (${statusCode})`;
+                if (statusCode === 401) return `Unauthorized (${statusCode})`;
+                if (statusCode === 403) return `Forbidden (${statusCode})`;
+                if (statusCode === 404) return `Not Found (${statusCode})`;
+                return `Client Error (${statusCode})`;
+            } else if (statusCode >= 500) {
+                if (statusCode === 500) return `Server Error (${statusCode})`;
+                if (statusCode === 502) return `Bad Gateway (${statusCode})`;
+                if (statusCode === 503) return `Service Unavailable (${statusCode})`;
+                return `Server Error (${statusCode})`;
+            } else {
+                // For any other status codes (like 1xx, etc.)
+                return `Status ${statusCode}`;
+            }
+        }
+
         function renderRequestTable(requests) {
             const tbody = document.getElementById('request-log');
 
@@ -365,15 +445,31 @@
             }
 
             tbody.innerHTML = requests.map(req => {
-                const statusClass = req.statusCode >= 200 && req.statusCode < 300 ? 'success' : 'error';
-                const timestamp = new Date(req.timestamp).toLocaleString();
+                // Determine status class based on status code
+                let statusClass = 'error'; // default
+                if (req.statusCode >= 200 && req.statusCode < 300) {
+                    statusClass = 'success';
+                } else if (req.statusCode >= 300 && req.statusCode < 400) {
+                    statusClass = 'redirect';
+                }
+
+                const statusLabel = getStatusLabel(req.statusCode);
+                const timestamp = new Date(req.timestamp).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
 
                 return `
         <tr>
           <td>${timestamp}</td>
           <td><code>${req.endpoint}</code></td>
           <td><span class="method-badge">${req.method}</span></td>
-          <td><span class="status-code ${statusClass}">${req.statusCode}</span></td>
+          <td><span class="status-code ${statusClass}">${statusLabel}</span></td>
           <td>${req.responseTime}ms</td>
         </tr>
       `;
@@ -381,13 +477,26 @@
         }
 
         function applyFilters() {
-            // Implement filter logic here
-            console.log('Applying filters...');
+            const dateValue = document.getElementById('filter-date').value;
+            const statusValue = document.getElementById('filter-status').value;
+
+            currentFilters = {
+                date: dateValue,
+                status: statusValue
+            };
+
+            loadUsageHistory(currentFilters);
         }
 
         function clearFilters() {
             document.getElementById('filter-date').value = '';
             document.getElementById('filter-status').value = '';
+
+            currentFilters = {
+                date: '',
+                status: ''
+            };
+
             loadUsageHistory();
         }
 

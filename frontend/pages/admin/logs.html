@@ -333,74 +333,73 @@
         let displayedLogs = 20;
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadLogs();
+            initLogs();
         });
 
-        async function loadLogs() {
-            const token = localStorage.getItem('token');
+        async function initLogs() {
+            await loadLogStats();
+            await loadLogs();
+        }
 
+        async function loadLogStats() {
             try {
-                const response = await fetch('http://localhost:3001/api/admin/logs?limit=100', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const res = await adminFetch("/api/admin/logs/stats");
+                const stats = await res.json();
 
-                if (!response.ok) throw new Error('Failed to fetch logs');
-
-                allLogs = await response.json();
-                updateStats();
-                renderLogs();
-
-            } catch (error) {
-                console.error('Error loading logs:', error);
-
-                // Generate sample logs for demonstration
-                allLogs = generateSampleLogs();
-                updateStats();
-                renderLogs();
+                document.getElementById('stat-total').textContent = stats.total_logs;
+                document.getElementById('stat-success').textContent = stats.success_count;
+                document.getElementById('stat-errors').textContent = stats.error_count;
+                document.getElementById('stat-warnings').textContent = stats.warning_count;
+            } catch (err) {
+                console.error("Failed to load log stats:", err);
             }
         }
 
-        function generateSampleLogs() {
-            const methods = ['GET', 'POST', 'PUT', 'DELETE'];
-            const endpoints = [
-                '/api/v1/games',
-                '/api/v1/games/:id',
-                '/api/auth/login',
-                '/api/user/dashboard',
-                '/api/user/keys',
-                '/api/admin/users'
-            ];
-            const statuses = [200, 201, 400, 401, 404, 500];
+        async function loadLogs() {
+            try {
+                const response = await adminFetch("/api/admin/logs?limit=100");
+                if (!response.ok) throw new Error('Failed to fetch logs');
 
-            return Array.from({ length: 50 }, (_, i) => {
-                const status = statuses[Math.floor(Math.random() * statuses.length)];
-                const method = methods[Math.floor(Math.random() * methods.length)];
-                const endpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
-
-                return {
-                    timestamp: new Date(Date.now() - i * 60000 * Math.random() * 10).toISOString(),
-                    method: method,
-                    endpoint: endpoint,
-                    status_code: status,
-                    response_time_ms: Math.floor(Math.random() * 200 + 50),
-                    user_id: Math.floor(Math.random() * 100) + 1,
-                    ip_address: `192.168.1.${Math.floor(Math.random() * 255)}`
-                };
-            });
+                allLogs = await response.json();
+                renderLogs();
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                document.getElementById('logs-container').innerHTML =
+                    '<div class="error">Failed to connect to server. Check console for details.</div>';
+            }
         }
 
-        function updateStats() {
-            const total = allLogs.length;
-            const success = allLogs.filter(log => log.status_code >= 200 && log.status_code < 300).length;
-            const errors = allLogs.filter(log => log.status_code >= 400).length;
-            const warnings = allLogs.filter(log => log.status_code >= 300 && log.status_code < 400).length;
+        function renderLogs() {
+            const container = document.getElementById('logs-container');
+            const logsToShow = allLogs.slice(0, displayedLogs);
 
-            document.getElementById('stat-total').textContent = total;
-            document.getElementById('stat-success').textContent = success;
-            document.getElementById('stat-errors').textContent = errors;
-            document.getElementById('stat-warnings').textContent = warnings;
+            if (logsToShow.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">No logs found</div>';
+                return;
+            }
+
+            container.innerHTML = logsToShow.map(log => {
+                const statusClass = log.status_code >= 200 && log.status_code < 300 ? 'success' :
+                    log.status_code >= 400 ? 'error' :
+                        log.status_code >= 300 && log.status_code < 400 ? 'warning' : '';
+
+                const timestamp = new Date(log.timestamp).toLocaleString();
+
+                return `
+        <div class="log-entry ${statusClass}">
+          <div class="log-header">
+            <span class="log-timestamp">⏰ ${timestamp}</span>
+            <span class="log-status ${statusClass}">${log.status_code}</span>
+          </div>
+          <div class="log-details">
+            <strong>${log.method}</strong> ${log.endpoint} - ${log.response_time_ms}ms
+          </div>
+          <div class="log-meta">
+            User: ${log.email || 'Guest'}
+          </div>
+        </div>
+      `;
+            }).join('');
         }
 
         function renderLogs() {

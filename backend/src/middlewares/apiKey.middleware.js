@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 
     const [rows] = await db.query(
       `
-      SELECT u.user_id
+      SELECT u.user_id, k.id AS key_id
       FROM api_keys k
       JOIN users u ON k.user_id = u.user_id
       WHERE k.key_string = ? AND k.status = 'active'
@@ -21,6 +21,12 @@ module.exports = async (req, res, next) => {
     if (rows.length === 0) {
       return res.status(403).json({ message: 'Invalid API Key' });
     }
+
+    // Update last_used timestamp
+    await db.query(
+      'UPDATE api_keys SET last_used = NOW() WHERE id = ?',
+      [rows[0].key_id]
+    );
 
     req.user = { user_id: rows[0].user_id };
     next();

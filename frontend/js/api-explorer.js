@@ -13,28 +13,17 @@ function initApiExplorer() {
   const testBtns = document.querySelectorAll(".test-endpoint-btn");
   const testApiBtn = document.getElementById("test-api-btn");
   const apiKeyInput = document.getElementById("api-key-input");
-  const useJwtBtn = document.getElementById("use-jwt-btn");
   const authTypeSpan = document.getElementById("auth-type");
 
   if (!testBtns.length || !testApiBtn) return;
 
-  // Use JWT button
-  if (useJwtBtn) {
-    useJwtBtn.addEventListener("click", () => {
-      apiKeyInput.value = "";
-      apiKeyInput.placeholder = "Using JWT Token authentication...";
-      authTypeSpan.textContent = "JWT Token";
-      showToast("Switched to JWT Token authentication", "success");
-    });
-  }
-
-  // API Key input change
+  // API Key input change - update auth display
   if (apiKeyInput) {
     apiKeyInput.addEventListener("input", (e) => {
       if (e.target.value.trim()) {
-        authTypeSpan.textContent = `API Key: ${e.target.value.substring(0, 8)}...`;
+        authTypeSpan.textContent = `API Key: ${e.target.value.substring(0, 12)}...`;
       } else {
-        authTypeSpan.textContent = "JWT Token";
+        authTypeSpan.textContent = "API Key (Required)";
       }
     });
   }
@@ -76,6 +65,25 @@ async function testRealApi(endpoint, apiKey = "") {
   const responseEl = document.getElementById("test-response");
   const testBtn = document.getElementById("test-api-btn");
 
+  // Validate API Key is provided
+  if (!apiKey || apiKey.trim() === "") {
+    responseEl.innerHTML = `
+      <div class="test-response-error">
+        <div class="test-response-status">
+          <span class="status-code error">ERROR</span>
+          <span class="status-text">API Key Required</span>
+        </div>
+        <pre class="test-response-body">{
+  "error": "API Key is required",
+  "message": "Please enter your API key to test the endpoint",
+  "hint": "Get your API key from the API Keys page"
+}</pre>
+      </div>
+    `;
+    showToast("API Key is required to test endpoints", "error");
+    return;
+  }
+
   // Show loading
   testBtn.disabled = true;
   testBtn.innerHTML = '<span>⏳</span> Loading...';
@@ -89,17 +97,9 @@ async function testRealApi(endpoint, apiKey = "") {
 
   try {
     const startTime = performance.now();
-    const headers = {};
-
-    // Use API Key if provided, otherwise use JWT token
-    if (apiKey) {
-      headers["x-api-key"] = apiKey;
-    } else {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-    }
+    const headers = {
+      "x-api-key": apiKey  // Always use API Key
+    };
 
     const response = await fetch(window.API_BASE + endpoint, { headers });
     const endTime = performance.now();
