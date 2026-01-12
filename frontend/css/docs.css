@@ -99,6 +99,52 @@ body {
   margin: 0 auto;
 }
 
+/* CALL BOX STYLE */
+.call-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #012952;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.call-box {
+  background-color: #2b303b;
+  /* Dark background similar to image */
+  color: #abb2bf;
+  padding: 16px 20px;
+  border-radius: 6px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  border: 1px solid #3b4048;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.call-box .method {
+  color: #61afef;
+  /* Blue for logic/protocol part if we want, or just plain text */
+  margin-right: 0;
+}
+
+.call-box .url {
+  color: #98c379;
+  /* Greenish for the main url */
+}
+
+.call-box .query {
+  color: #d19a66;
+  /* Orange/Brown for params */
+}
+
+.call-box .val {
+  color: #56b6c2;
+  /* Cyan for values */
+}
+
 /* DOCUMENTATION CONTAINER */
 .doc-container {
   background: rgba(255, 255, 255, 0.95);
